@@ -1,6 +1,9 @@
 var express = require('express');
-var userRoutes = require('./routes/user.route');
+var userRoute = require('./routes/user.route');
+var authRoute = require('./routes/auth.route');
 var cookieParser = require('cookie-parser');
+
+var authMiddleware = require('./middlewares/auth.middleware');
 
 var port = 3000;
 
@@ -21,7 +24,8 @@ app.get('/', function(req, res) {
     });
 });
 
-app.use('/users', userRoutes);
+app.use('/users', authMiddleware.requireAuth, userRoute);
+app.use('/auth', authRoute);
 
 app.listen(port, function() {
     console.log('Server listen on port ' + port);
